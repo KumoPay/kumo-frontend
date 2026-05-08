@@ -70,6 +70,104 @@ html, body {
 .topnav__connect:active { transform: scale(0.98); }
 .has-topnav { padding-top: 84px; }
 
+/* Landing (/): mascot rises from the fold when scrolled into view */
+.landing-kumo-fold-pending {
+  opacity: 0;
+  transform: translateY(5.85rem);
+  pointer-events: none;
+}
+
+@keyframes landing-kumo-from-fold {
+  0% {
+    opacity: 0;
+    transform: translateY(5.85rem);
+  }
+  24% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.landing-kumo-from-fold.landing-kumo-from-fold--in {
+  animation: landing-kumo-from-fold 1.55s cubic-bezier(0.26, 0.94, 0.36, 1) both;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-kumo-fold-pending {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+  .landing-kumo-from-fold.landing-kumo-from-fold--in {
+    animation: none !important;
+  }
+}
+
+/* Landing CTA mascot: friendly “hello” wave (bob + sway) */
+@keyframes landing-cta-kumo-wave {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  12% {
+    transform: translateY(-6px) rotate(-8deg);
+  }
+  28% {
+    transform: translateY(-11px) rotate(9deg);
+  }
+  44% {
+    transform: translateY(-8px) rotate(-7deg);
+  }
+  60% {
+    transform: translateY(-10px) rotate(8deg);
+  }
+  78% {
+    transform: translateY(-4px) rotate(-3deg);
+  }
+}
+
+.landing-cta-kumo-wave-animation {
+  transform-origin: 52% 92%;
+  animation: landing-cta-kumo-wave 2.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-cta-kumo-wave-animation {
+    animation: none !important;
+  }
+}
+
+/* Landing: toned-down motion when prefers-reduced-motion is set */
+@media (prefers-reduced-motion: reduce) {
+  .landing-page-motion,
+  .landing-page-motion *,
+  .landing-page-motion *::before,
+  .landing-page-motion *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}
+
+/* “Get the app” modal: native <dialog>. Top layer — truly centered viewport, unaffected by nav backdrop-filter etc. */
+.landing-android-download-modal {
+  max-width: 340px;
+  width: calc(100vw - 2rem);
+  margin: auto;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.landing-android-download-modal::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
 /* Override wallet-adapter-react-ui button to match Kumo styling */
 .kumo-wallet-btn .wallet-adapter-button {
   width: 100%;
