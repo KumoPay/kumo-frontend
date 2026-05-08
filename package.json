@@ -1,0 +1,21 @@
+{
+  "name": "kumo-frontend-mock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Frontend-only mock of the Kumo desktop app for UI/design iteration. Every external integration is replaced with a deterministic in-process mock.",
+  "scripts": {
+    "dev": "pnpm --filter desktop dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm --filter desktop typecheck"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  }
+}
