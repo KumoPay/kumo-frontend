@@ -164,7 +164,7 @@ export default function FlowPage() {
     >
       <LandingNav anchorsRelativeToHome={false} />
 
-      <main className="relative mx-auto grid max-w-[1100px] items-start gap-10 px-5 pb-20 pt-[88px] md:gap-12 md:px-8 lg:grid-cols-[1fr_auto_1fr] lg:gap-14 lg:pb-24">
+      <main className="relative mx-auto grid max-w-[1100px] items-start gap-10 px-5 pb-20 pt-[max(5.75rem,calc(5rem+env(safe-area-inset-top,0px)))] md:gap-12 md:px-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-14 lg:pb-24">
         {/* Left: step list */}
         <aside className="lg:sticky lg:top-28">
           <div className="mb-3 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-500">Interactive flow</div>
@@ -224,7 +224,7 @@ export default function FlowPage() {
         </aside>
 
         {/* Center: phone frame */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center lg:justify-self-center">
           <div className="relative">
             <PhoneShell>
               <Body {...screenProps} />
@@ -261,11 +261,6 @@ export default function FlowPage() {
             </button>
           </div>
         </div>
-
-        {/* Right: notes */}
-        <aside className="lg:sticky lg:top-28">
-          <FlowNotes screen={screen.id} />
-        </aside>
       </main>
     </div>
   )
@@ -1034,75 +1029,3 @@ function CloudTinyGlyph({ color = "#C7B5FF" }: { color?: string }) {
   )
 }
 
-
-function FlowNotes({ screen }: { screen: ScreenId }) {
-  const notes: Record<ScreenId, { title: string; mascot: string; bullets: string[] }> = {
-    connect: {
-      title: "Welcoming hero",
-      mascot: "cheerful — antenna sparkling",
-      bullets: [
-        "Three Mobile Wallet Adapter cards in soft sky-blue.",
-        "Saga Seed Vault footnote in lilac.",
-        "Subtle 3s breathing animation on the hero.",
-      ],
-    },
-    intent: {
-      title: "Speak intent",
-      mascot: "curious — eyes wide, listening",
-      bullets: [
-        "On-device QVAC parser, no cloud round-trips.",
-        "Toggle Airplane to feel the offline promise.",
-        "Soft-cyan focus ring, no hard borders.",
-      ],
-    },
-    sign: {
-      title: "Sign with Face ID",
-      mascot: "concentrating — eyes closed",
-      bullets: [
-        "Parsed intent shown as friendly key/value, not raw JSON.",
-        "Durable-nonce signing. No RPC required.",
-        "Hold the Face ID prompt to seal the tx.",
-      ],
-    },
-    queued: {
-      title: "Resting offline",
-      mascot: "sleeping — sleep marks rising",
-      bullets: [
-        "Cached tx waits in IndexedDB until reconnect.",
-        "Status pill turns lilac for airplane mode.",
-        "Reassuring copy: 'Nothing is leaving.'",
-      ],
-    },
-    settled: {
-      title: "Delivered ✨",
-      mascot: "celebrating — arms up, sparkles",
-      bullets: [
-        "Receipt as a friendly card with Solscan link.",
-        "Public chain shows only a heartbeat.",
-        "CTA loops back so you can send another.",
-      ],
-    },
-  }
-  const note = notes[screen]
-  return (
-    <div className="rounded-[20px] border border-[#f1f0ff] bg-white p-6 shadow-[0_12px_40px_rgba(109,40,217,0.10)]">
-      <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Design notes</div>
-      <h3 className="mt-1 text-[22px] font-black leading-tight tracking-tight text-[#1a1a2e]">{note.title}</h3>
-      <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#f5f3ff] px-3 py-1.5 text-[12px] font-bold text-[#5b21b6] ring-1 ring-[#ebe9fc]">
-        <span aria-hidden="true">🐾</span>
-        {note.mascot}
-      </div>
-      <ul className="mt-5 space-y-3">
-        {note.bullets.map((b, i) => (
-          <li key={i} className="flex gap-3 text-[13px] leading-snug text-[#475569]">
-            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#6d28d9]" />
-            <span>{b}</span>
-          </li>
-        ))}
-      </ul>
-      <div className="mt-6 border-t border-[#f1f0ff] pt-4 text-[12px] leading-relaxed text-slate-500">
-        <span className="font-bold text-[#1a1a2e]">Voice:</span> companion energy. Kumo waits with you.
-      </div>
-    </div>
-  )
-}

@@ -90,7 +90,7 @@ export function GetTheAppButton(props: {
       >
         <div
           ref={panelRef}
-          className="rounded-[20px] border border-[#e9e6ff] bg-white p-6 shadow-[0_24px_64px_-12px_rgba(109,40,217,0.28)]"
+          className="rounded-[20px] border border-[#e9e6ff] bg-white p-5 shadow-[0_24px_64px_-12px_rgba(109,40,217,0.28)] sm:p-6"
         >
           <div className="mb-6">
             <h2
