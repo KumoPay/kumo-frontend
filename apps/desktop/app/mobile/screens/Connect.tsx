@@ -1,117 +1,188 @@
 "use client"
 
 import Image from "next/image"
-import type { ScreenRenderer, WalletInfo } from "./types"
 
-export const WALLETS: WalletInfo[] = [
-  {
-    id: "phantom",
-    label: "Phantom",
-    brand: "#AB9FF2",
-    initial: "P",
-    pubkey: "561BgNK9Rt8oNdvv51FEFp9JX9iW8ncWson5BryRvA8z",
-    displayName: "alice.kumo",
-  },
-  {
-    id: "solflare",
-    label: "Solflare",
-    brand: "#FC8E2D",
-    initial: "S",
-    pubkey: "8Hx2T9Wq5cR3vN1mF7yK4eJ6tB2pL0sA9gH8iC3xZ4kV",
-    displayName: "alice.sol",
-  },
-  {
-    id: "backpack",
-    label: "Backpack",
-    brand: "#E33E7F",
-    initial: "B",
-    pubkey: "3KqV7tM2nP4rW8yL6cF1eR9jD5xA0bH7gT2iZ8kN6sQ4",
-    displayName: "alice",
-  },
-  {
-    id: "glow",
-    label: "Glow",
-    brand: "#FFC83D",
-    initial: "G",
-    pubkey: "7BzN4xT9rK2pL6mF8eC1yA5jW3vH0iR4dQ7tS2gM9hP6",
-    displayName: "alice.glow",
-  },
-]
+import type { ScreenRenderer } from "./types"
+import { mock } from "./mock"
 
+/** Connect wallet landing — polished mobile welcome + wallet picker. */
 export const Connect: ScreenRenderer = (ctx) => ({
   body: (
-    <div>
-      <div className="text-center pt-2">
-        <div className="animate-breathe inline-block">
-          <Image
-            src="/state-00.png"
-            alt="Kumo"
-            width={140}
-            height={140}
-            priority
-            style={{ width: 140, height: 140, objectFit: "contain" }}
-          />
-        </div>
-
-        <div className="font-display font-black text-navy text-[34px] tracking-[-0.02em] mt-1 leading-none">
-          Welcome to Kumo
-        </div>
-        <div className="text-[13px] font-semibold text-navy/55 mt-2 px-3">
-          Pay when the signal disappears.
-        </div>
-      </div>
-
-      <div className="mt-7">
-        <div className="text-[10px] font-bold tracking-[0.18em] uppercase text-navy/50 mb-2">
-          choose a wallet
-        </div>
-
-        <div className="bg-white rounded-2xl softshadow-sm overflow-hidden">
-          {WALLETS.map((w, i) => (
-            <button
-              key={w.id}
-              onClick={() => ctx.connectWallet(w)}
-              className={[
-                "pressable w-full flex items-center gap-3 px-4 py-3.5 text-left",
-                i < WALLETS.length - 1 ? "border-b border-dashed border-navy/8" : "",
-              ].join(" ")}
+    <div className="-mx-5 mt-[-2px] min-h-[min(72dvh,720px)] bg-gradient-to-b from-white via-[#f9fbff] to-[#ecf0fb] px-5 pb-10 pt-1">
+      {/* Hero */}
+      <div className="flex flex-col items-center pb-8 pt-6 text-center">
+        <div
+          className="relative mx-auto w-[88%] max-w-[295px]"
+          style={{ aspectRatio: "1 / 0.94" }}
+        >
+          {/* Signal arcs — cyan curves to the mascot's left (mock feel) */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute left-[-6%] top-[52%] -translate-y-1/2"
+          >
+            <svg
+              width={58}
+              height={96}
+              viewBox="0 0 58 96"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="opacity-[0.55]"
             >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center font-display font-black text-white text-[16px]"
-                style={{ background: w.brand }}
-              >
-                {w.initial}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-extrabold text-navy text-[15px]">{w.label}</div>
-                <div className="text-[11px] text-navy/55 font-semibold">
-                  Detected · Tap to connect
-                </div>
-              </div>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path
-                  d="M9 6l6 6-6 6"
-                  stroke="#0B1020"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  opacity="0.4"
-                />
-              </svg>
-            </button>
-          ))}
+              <path
+                d="M6 18C18 38 26 54 31 71"
+                stroke="#7FD4FF"
+                strokeWidth={3}
+                strokeLinecap="round"
+                opacity={0.85}
+                style={{
+                  strokeDasharray: "4 62",
+                }}
+              />
+              <path
+                d="M2 42C13 53 21 61 31 71"
+                stroke="#9EE3FF"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                opacity={0.75}
+                style={{
+                  strokeDasharray: "3 50",
+                }}
+              />
+              <path
+                d="M1 61C13 61 26 71 31 78"
+                stroke="#B7F1FF"
+                strokeWidth={2}
+                strokeLinecap="round"
+                opacity={0.65}
+                style={{
+                  strokeDasharray: "2 40",
+                }}
+              />
+            </svg>
+          </div>
+
+          <div className="motion-safe:animate-breathe flex h-full items-end justify-center">
+            <Image
+              src="/state-05.png"
+              alt="Kumo friendly mascot waving"
+              width={340}
+              height={340}
+              priority
+              className="relative z-[1] w-[calc(76vw-32px)] max-w-[278px] h-auto translate-y-[2px]"
+              draggable={false}
+            />
+          </div>
         </div>
 
-        <div className="text-[11px] text-navy/55 mt-3 font-semibold text-center px-4 leading-relaxed">
-          Devnet only. No real funds will move.
-        </div>
-
-        <div className="text-[11px] text-navy/45 mt-4 font-semibold text-center">
-          Need devnet USDC?{" "}
-          <span className="underline font-bold">faucet.circle.com</span>
-        </div>
+        <h1 className="font-display relative z-[1] mt-4 max-w-[18ch] text-[clamp(28px,7.4vw,34px)] font-extrabold leading-[1.12] tracking-[-0.03em] text-[#0f131c]">
+          Welcome to Kumo
+        </h1>
+        <p className="relative z-[1] mt-2 max-w-[22ch] text-[15px] leading-snug text-slate-500">
+          Pay when the signal disappears.
+        </p>
       </div>
+
+      <p className="mb-2 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
+        Choose a wallet
+      </p>
+
+      <div
+        className="overflow-hidden rounded-[26px] border border-slate-100/80 bg-white shadow-[0_14px_44px_rgba(15,23,42,0.09)]"
+        role="list"
+      >
+        {(
+          [
+            {
+              name: "Phantom",
+              tail: "P",
+              id: "phantom",
+              logoSrc: "/wallet-phantom.png",
+            },
+            {
+              name: "Solflare",
+              tail: "S",
+              id: "solflare",
+              logoSrc: "/wallet-solflare.png",
+            },
+            {
+              name: "Backpack",
+              tail: "B",
+              id: "backpack",
+              logoSrc: "/wallet-backpack.png",
+            },
+            {
+              name: "Glow",
+              tail: "G",
+              id: "glow",
+              logoSrc: "/wallet-glow.png",
+            },
+          ] as const
+        ).map((w, i, arr) => (
+          <button
+            key={w.id}
+            type="button"
+            role="listitem"
+            onClick={() =>
+              ctx.connectWallet({
+                id: w.id,
+                label: w.name,
+                brand: w.id,
+                initial: w.tail,
+                pubkey: mock.walletPubkey,
+                displayName: mock.walletDisplayName,
+              })
+            }
+            className={[
+              "flex w-full items-center gap-3 px-[18px] py-[15px] text-left outline-none ring-inset motion-safe:transition-colors",
+              "cursor-pointer hover:bg-slate-50/90 active:bg-slate-100/90",
+              "focus-visible:bg-slate-50 focus-visible:ring-2 focus-visible:ring-black/25",
+              i < arr.length - 1 ? "border-b border-slate-100" : "",
+            ].join(" ")}
+          >
+            <div
+              className="relative flex size-11 flex-none shrink-0 items-center justify-center overflow-hidden rounded-full shadow-[0_12px_30px_-12px_rgba(22,59,138,0.35)] ring-4 ring-black/[0.04]"
+              aria-hidden
+            >
+              <Image
+                src={w.logoSrc}
+                alt=""
+                width={44}
+                height={44}
+                className="size-full object-cover"
+                draggable={false}
+              />
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+              <span className="truncate text-[16px] font-bold leading-none text-black">
+                {w.name}
+              </span>
+              <span className="text-[12px] leading-tight text-slate-400">
+                Detected · Tap to connect
+              </span>
+            </div>
+            <span
+              className="flex-none shrink-0 pr-1 text-[18px] font-semibold tabular-nums text-slate-300"
+              aria-hidden
+            >
+              ›
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <p className="mt-5 px-4 text-center text-[12px] text-slate-500">
+        Devnet only. No real funds will move.
+      </p>
+      <p className="mt-2 px-4 text-center text-[13px] font-semibold">
+        <a
+          href="https://faucet.circle.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#6d28d9] underline decoration-[#d8b4fe] underline-offset-[3px] transition-colors hover:text-[#5b21b6]"
+        >
+          Need devnet USDC? faucet.circle.com
+        </a>
+      </p>
     </div>
   ),
-  // No bottom CTA — the wallet rows themselves are the primary action.
 })

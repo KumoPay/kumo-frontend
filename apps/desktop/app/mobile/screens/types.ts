@@ -7,6 +7,7 @@ export type ScreenId =
   | "receive"
   | "settings"
   | "connect"
+  | "alias"
   | "intent"
   | "sign"
   | "queued"
@@ -34,6 +35,8 @@ export type NavCtx = {
   wallet: WalletInfo | null
   connectWallet: (w: WalletInfo) => void
   disconnectWallet: () => void
+  /** Finishes one-time onboarding: saves plain alias and continues to Home + splash. */
+  completeAliasOnboarding: (localHandle: string) => void
 }
 
 export type ScreenSlots = {

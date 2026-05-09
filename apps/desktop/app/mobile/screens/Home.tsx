@@ -1,188 +1,247 @@
 "use client"
 
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from "react"
 import Image from "next/image"
-import { PrimaryCTA } from "./atoms"
+
+import { displayWalletAlias } from "../alias-utils"
 import type { ScreenRenderer } from "./types"
 import { mock } from "./mock"
 
 const formatUsdc = (n: number) =>
   n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
+/** Home — referencia español; saludo solo muestra alias (sin .kumo). */
 export const Home: ScreenRenderer = (ctx) => ({
   body: (
-    <div>
-      {/* Greeting */}
-      <div className="flex items-center justify-between gap-3 mt-1">
-        <div>
-          <div className="text-[12px] font-bold tracking-wide uppercase text-navy/55">
-            Welcome back
+    <div className="-mx-5 min-h-full bg-[#f9fafb] px-5 pb-2 pt-0">
+      <div className="mx-auto w-full max-w-[320px]">
+        <div className="pt-4">
+          <h1 className="font-display font-black leading-none tracking-[-0.03em] text-[#141b2f] text-[26px]">
+            Hola,&nbsp;
+            <span className="lowercase">
+              {displayWalletAlias(ctx.wallet?.displayName) || "alice"}
+            </span>
+            &nbsp;
+            <span aria-hidden className="inline-block translate-y-[1px]">
+              👋
+            </span>
+          </h1>
+          <p className="mt-2 text-[14px] font-medium leading-snug text-[#6b7380]">
+            Pagos privados, incluso offline.
+          </p>
+        </div>
+
+        <div className="relative mt-6 flex w-full items-stretch overflow-hidden rounded-[28px] border border-[#eef0f3] bg-white shadow-[0_8px_30px_-12px_rgba(15,23,42,0.1)]">
+          <div className="flex min-w-0 flex-1 flex-col justify-center py-6 pl-6 pr-3">
+            <div className="text-[13px] font-medium leading-tight text-[#6b7280]">Saldo disponible</div>
+            <div className="mt-2 font-display font-black tabular-nums text-[clamp(30px,8vw,36px)] leading-none tracking-[-0.03em] text-[#111827]">
+              ${formatUsdc(mock.balanceUsdc)}
+            </div>
+            <p className="mt-1 text-[13px] font-semibold tabular-nums leading-tight tracking-tight text-[#6b7280]">
+              {mock.usdcTokenBalance} USDC
+            </p>
+            <div className="mt-4 inline-flex w-fit items-center gap-2 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
+              <span className="size-[7px] shrink-0 rounded-full bg-[#10b981]" aria-hidden />
+              <span className="text-[12px] font-semibold leading-none text-[#6b7280]">Conectado</span>
+            </div>
           </div>
-          <div className="font-display font-black text-navy text-[26px] tracking-[-0.02em] leading-tight">
-            Hi, {ctx.wallet?.displayName ?? "friend"} ☁
+
+          <div
+            aria-hidden
+            className="relative flex w-[38%] min-w-[116px] max-w-[152px] shrink-0 items-end justify-end pr-5 pb-4 pt-6 pl-1"
+          >
+            <Image
+              src="/state-06.png"
+              alt=""
+              width={400}
+              height={400}
+              priority
+              draggable={false}
+              className="h-[min(118px,31vw)] w-auto max-h-[124px] select-none object-contain object-bottom"
+            />
           </div>
         </div>
-        <div className="animate-breathe">
-          <Image
-            src="/state-00.png"
-            alt=""
-            width={56}
-            height={56}
-            priority
-            style={{ width: 56, height: 56, objectFit: "contain" }}
+
+        <div className="mt-4 grid grid-cols-3 gap-2.5">
+          <DashboardTile
+            label="Pagar"
+            tint="#ede9fe"
+            iconStroke="#6847e8"
+            onClick={() => ctx.push("intent")}
+            icon={<ArrowUp />}
+          />
+          <DashboardTile
+            label="Recibir"
+            tint="#dbefff"
+            iconStroke="#0b7dd4"
+            onClick={() => ctx.push("receive")}
+            icon={<ArrowDown />}
+          />
+          <DashboardTile
+            label="Historial"
+            tint="#d8fae6"
+            iconStroke="#0d8948"
+            onClick={() => ctx.push("history")}
+            icon={<ClockHistory />}
           />
         </div>
-      </div>
 
-      {/* Balance card */}
-      <div
-        className="mt-4 rounded-3xl p-5 relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #7FE8FF 0%, #B7F1FF 55%, #C7B5FF 130%)",
-          boxShadow: "0 12px 30px rgba(127,232,255,0.35)",
-        }}
-      >
-        <div className="text-[11px] font-bold tracking-[0.18em] uppercase text-navy/65">
-          USDC · devnet
-        </div>
-        <div className="font-display font-black text-navy text-[40px] tracking-[-0.02em] leading-none mt-2">
-          ${formatUsdc(mock.balanceUsdc)}
-        </div>
-        <div className="text-[12px] font-semibold text-navy/65 mt-2">
-          {ctx.wallet?.label ?? "—"} ·{" "}
-          {ctx.wallet
-            ? `${ctx.wallet.pubkey.slice(0, 5)}…${ctx.wallet.pubkey.slice(-4)}`
-            : ""}
-        </div>
-      </div>
-
-      {/* Tile grid */}
-      <div className="grid grid-cols-3 gap-2.5 mt-4">
-        <Tile label="Receive" icon={<IconReceive />} onClick={() => ctx.push("receive")} />
-        <Tile label="Contacts" icon={<IconContacts />} onClick={() => ctx.push("contacts")} />
-        <Tile label="History" icon={<IconHistory />} onClick={() => ctx.push("history")} />
-      </div>
-
-      {/* Recent activity */}
-      <div className="mt-6">
-        <div className="flex items-baseline justify-between mb-2">
-          <div className="text-[10px] font-bold tracking-[0.18em] uppercase text-navy/50">
-            recent activity
-          </div>
-          <button
-            onClick={() => ctx.push("history")}
-            className="text-[11px] font-extrabold text-navy underline-offset-2 hover:underline"
-          >
-            See all
-          </button>
-        </div>
-
-        <div className="bg-white rounded-2xl softshadow-sm overflow-hidden">
-          {mock.history.slice(0, 3).map((h, i) => (
-            <div
-              key={h.id}
-              className={[
-                "flex items-center gap-3 px-3.5 py-3",
-                i < 2 ? "border-b border-dashed border-navy/8" : "",
-              ].join(" ")}
+        <div className="mt-9">
+          <div className="mb-3 flex items-baseline justify-between gap-4">
+            <h2 className="font-display text-[19px] font-black tracking-[-0.02em] text-[#131b34]">
+              Actividad reciente
+            </h2>
+            <button
+              type="button"
+              onClick={() => ctx.push("history")}
+              className="shrink-0 text-[14px] font-bold text-[#7c5cff] transition-opacity hover:opacity-85"
             >
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-[14px] text-navy"
-                style={{ background: h.direction === "out" ? "#C7B5FF" : "#7FE8FF" }}
-              >
-                {h.direction === "out" ? "↑" : "↓"}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-extrabold text-navy text-[14px] truncate">
-                  {h.direction === "out" ? `To ${h.counterparty}` : `From ${h.counterparty}`}
-                </div>
-                <div className="text-[11px] text-navy/55 font-semibold">{h.when}</div>
-              </div>
-              <div className="text-right">
+              Ver todo
+            </button>
+          </div>
+
+          <div className="overflow-hidden rounded-[24px] bg-white shadow-[0_10px_36px_-10px_rgba(15,23,42,0.09)] ring-1 ring-black/[0.03]">
+            {mock.history.slice(0, 3).map((h, i) => {
+              const contact = mock.contacts.find((c) => c.id === h.counterparty)
+              const initial = contact?.initial ?? h.counterparty.slice(0, 1).toUpperCase()
+              const bg = contact?.bg ?? (h.direction === "out" ? "#e8e0ff" : "#d4f5e6")
+              const title = h.direction === "out" ? `A ${h.counterparty}` : `De ${h.counterparty}`
+              const amountPrefix = h.direction === "out" ? "−" : "+"
+              const statusLabel = h.direction === "out" ? "enviado" : "recibido"
+              const statusColor = h.direction === "out" ? "#7c5cff" : "#1b9e5a"
+
+              return (
                 <div
+                  key={h.id}
                   className={[
-                    "font-extrabold text-[14px]",
-                    h.direction === "out" ? "text-navy" : "text-navy",
+                    "flex items-center gap-3 px-4 py-[14px]",
+                    i < 2 ? "border-b border-[#eef0f3]" : "",
                   ].join(" ")}
                 >
-                  {h.direction === "out" ? "−" : "+"}${formatUsdc(h.amount)}
+                  <div
+                    className="flex size-11 shrink-0 items-center justify-center rounded-full text-[16px] font-extrabold text-[#131b34]"
+                    style={{ backgroundColor: bg }}
+                  >
+                    {initial}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-[15px] font-extrabold capitalize leading-tight text-[#131b34]">
+                      {title}
+                    </div>
+                    <div className="mt-1 text-[12px] font-semibold capitalize text-[#8b929d]">{h.when}</div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="text-[15px] font-extrabold tabular-nums tracking-tight text-[#131b34]">
+                      {amountPrefix}
+                      {formatUsdc(h.amount)} USDC
+                    </div>
+                    <div className="mt-0.5 text-[11px] font-bold capitalize" style={{ color: statusColor }}>
+                      {statusLabel}
+                    </div>
+                  </div>
                 </div>
-                <div
-                  className="text-[10px] font-bold uppercase tracking-wide"
-                  style={{ color: h.status === "queued" ? "#7B6CC9" : "#0B1020", opacity: h.status === "queued" ? 1 : 0.55 }}
-                >
-                  {h.status}
-                </div>
-              </div>
-            </div>
-          ))}
+              )
+            })}
+          </div>
         </div>
-      </div>
 
-      <div className="h-2" />
+        <div className="h-3" aria-hidden />
+      </div>
     </div>
   ),
-  cta: <PrimaryCTA onClick={() => ctx.push("intent")}>Pay someone →</PrimaryCTA>,
+  cta: (
+    <div className="mx-auto w-full max-w-[320px]">
+      <PayBar onPay={() => ctx.push("intent")} />
+    </div>
+  ),
 })
 
-function Tile({
-  label,
-  icon,
-  onClick,
-}: {
-  label: string
-  icon: React.ReactNode
-  onClick: () => void
-}) {
+function PayBar({ onPay }: { onPay: () => void }) {
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") onPay()
+  }
+
   return (
     <button
-      onClick={onClick}
-      className="pressable bg-white rounded-2xl py-4 px-2 flex flex-col items-center gap-1.5 softshadow-sm"
+      type="button"
+      tabIndex={0}
+      aria-label="Nuevo pago"
+      onClick={onPay}
+      onKeyDown={onKeyDown}
+      className="pressable mx-auto flex w-full items-center justify-center gap-2.5 rounded-[18px] py-[17px] font-display text-[16px] font-bold text-white outline-none [&_svg]:text-white"
+      style={{
+        background: "#7c5cff",
+        border: "none",
+        boxShadow: "0 12px 28px -6px rgba(124,92,255,0.5)",
+      }}
     >
-      <span
-        className="w-10 h-10 rounded-full flex items-center justify-center"
-        style={{ background: "rgba(127,232,255,0.35)" }}
-      >
-        {icon}
-      </span>
-      <span className="font-display font-extrabold text-navy text-[12px]">{label}</span>
+      <IconPlane />
+      Nuevo pago
     </button>
   )
 }
 
-function IconReceive() {
+function IconPlane() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 4v12m0 0l-5-5m5 5l5-5M5 20h14"
-        stroke="#0B1020"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="currentColor" aria-hidden className="shrink-0">
+      <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2-.99 9z" />
     </svg>
   )
 }
 
-function IconContacts() {
+function DashboardTile({
+  label,
+  icon,
+  tint,
+  iconStroke,
+  onClick,
+}: {
+  label: string
+  icon: ReactNode
+  tint: string
+  iconStroke: string
+  onClick: () => void
+}) {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="8" r="3.5" stroke="#0B1020" strokeWidth="2" />
-      <path
-        d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5"
-        stroke="#0B1020"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
+    <button
+      type="button"
+      onClick={onClick}
+      className="pressable flex flex-col items-center rounded-[22px] bg-white pb-3 pt-6 shadow-[0_8px_28px_-12px_rgba(15,23,42,0.1)] outline-none ring-1 ring-black/[0.03]"
+    >
+      <span
+        className="inline-flex items-center justify-center rounded-full px-[18px] py-[16px]"
+        style={{ backgroundColor: tint }}
+      >
+        <span style={{ color: iconStroke }}>{icon}</span>
+      </span>
+      <span className="mt-2.5 px-1 text-center font-display text-[13px] font-extrabold leading-snug text-[#131b34]">
+        {label}
+      </span>
+    </button>
+  )
+}
+
+function ArrowUp() {
+  return (
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
+      <path d="M12 19V5M12 5l-6 6M12 5l6 6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
-function IconHistory() {
+function ArrowDown() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke="#0B1020" strokeWidth="2" />
-      <path d="M12 7v5l3 2" stroke="#0B1020" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
+      <path d="M12 5v14M12 19l6-6M12 19l-6-6M5 21h14" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+function ClockHistory() {
+  return (
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
+      <circle cx={12} cy={12} r={9} />
+      <path d="M12 7v6l4 3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }

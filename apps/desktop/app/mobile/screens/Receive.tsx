@@ -1,5 +1,6 @@
 "use client"
 
+import { displayWalletAlias } from "../alias-utils"
 import { Eyebrow, PrimaryCTA, Row } from "./atoms"
 import type { ScreenRenderer } from "./types"
 import { mock } from "./mock"
@@ -23,7 +24,7 @@ export const Receive: ScreenRenderer = (ctx) => ({
           <MockQR />
         </div>
         <div className="font-display font-black text-navy text-[18px] mt-4 tracking-[-0.01em]">
-          {ctx.wallet?.displayName ?? mock.walletDisplayName}
+          {displayWalletAlias(ctx.wallet?.displayName) || mock.walletDisplayName}
         </div>
         <div className="font-mono text-[11px] text-navy/55 mt-1 break-all text-center max-w-[260px]">
           {ctx.wallet?.pubkey ?? mock.walletPubkey}

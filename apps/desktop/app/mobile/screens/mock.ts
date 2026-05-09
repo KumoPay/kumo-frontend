@@ -18,8 +18,11 @@ export type HistoryEntry = {
 export const mock = {
   walletLabel: "Phantom",
   walletPubkey: "561BgNK9Rt8oNdvv51FEFp9JX9iW8ncWson5BryRvA8z",
-  walletDisplayName: "alice.kumo",
+  walletDisplayName: "alice",
+  /** Valor fiat mostrado ($245.30). */
   balanceUsdc: 245.3,
+  /** Tokens USDC en cartera (referencia UI: segunda línea bajo el monto). */
+  usdcTokenBalance: 250,
 
   contacts: [
     { id: "alice", name: "Alice Reyes", handle: "@alice", bg: "#7FE8FF", initial: "A" },
@@ -30,9 +33,9 @@ export const mock = {
   ] as Contact[],
 
   history: [
-    { id: "h1", direction: "out", counterparty: "alice", amount: 1, status: "delivered", when: "just now" },
-    { id: "h2", direction: "in", counterparty: "bob", amount: 5, status: "delivered", when: "yesterday" },
-    { id: "h3", direction: "out", counterparty: "carol", amount: 12.5, status: "queued", when: "2d ago" },
+    { id: "h1", direction: "out", counterparty: "alice", amount: 1, status: "delivered", when: "Hace 2 min" },
+    { id: "h2", direction: "in", counterparty: "bob", amount: 5, status: "delivered", when: "Hace 1 h" },
+    { id: "h3", direction: "out", counterparty: "carol", amount: 12.5, status: "queued", when: "Hace 2 h" },
     { id: "h4", direction: "in", counterparty: "elena", amount: 8, status: "delivered", when: "1w ago" },
     { id: "h5", direction: "out", counterparty: "david", amount: 4.2, status: "delivered", when: "1w ago" },
   ] as HistoryEntry[],
