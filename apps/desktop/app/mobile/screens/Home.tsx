@@ -10,30 +10,28 @@ import { mock } from "./mock"
 const formatUsdc = (n: number) =>
   n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
-/** Home — referencia español; saludo solo muestra alias (sin .kumo). */
+/** Home — greeting shows alias only (no .kumo). */
 export const Home: ScreenRenderer = (ctx) => ({
   body: (
     <div className="-mx-5 min-h-full bg-[#f9fafb] px-5 pb-2 pt-0">
       <div className="mx-auto w-full max-w-[320px]">
         <div className="pt-4">
           <h1 className="font-display font-black leading-none tracking-[-0.03em] text-[#141b2f] text-[26px]">
-            Hola,&nbsp;
-            <span className="lowercase">
-              {displayWalletAlias(ctx.wallet?.displayName) || "alice"}
-            </span>
+            Hi,&nbsp;
+            <span>{displayWalletAlias(ctx.wallet?.displayName) || "alice"}</span>
             &nbsp;
             <span aria-hidden className="inline-block translate-y-[1px]">
               👋
             </span>
           </h1>
           <p className="mt-2 text-[14px] font-medium leading-snug text-[#6b7380]">
-            Pagos privados, incluso offline.
+            Private payments—even offline.
           </p>
         </div>
 
         <div className="relative mt-6 flex w-full items-stretch overflow-hidden rounded-[28px] border border-[#eef0f3] bg-white shadow-[0_8px_30px_-12px_rgba(15,23,42,0.1)]">
           <div className="flex min-w-0 flex-1 flex-col justify-center py-6 pl-6 pr-3">
-            <div className="text-[13px] font-medium leading-tight text-[#6b7280]">Saldo disponible</div>
+            <div className="text-[13px] font-medium leading-tight text-[#6b7280]">Available balance</div>
             <div className="mt-2 font-display font-black tabular-nums text-[clamp(30px,8vw,36px)] leading-none tracking-[-0.03em] text-[#111827]">
               ${formatUsdc(mock.balanceUsdc)}
             </div>
@@ -42,14 +40,24 @@ export const Home: ScreenRenderer = (ctx) => ({
             </p>
             <div className="mt-4 inline-flex w-fit items-center gap-2 rounded-full border border-[#e5e7eb] bg-white px-3 py-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.05)]">
               <span className="size-[7px] shrink-0 rounded-full bg-[#10b981]" aria-hidden />
-              <span className="text-[12px] font-semibold leading-none text-[#6b7280]">Conectado</span>
+              <span className="text-[12px] font-semibold leading-none text-[#6b7280]">Connected</span>
             </div>
           </div>
 
           <div
             aria-hidden
-            className="relative flex w-[38%] min-w-[116px] max-w-[152px] shrink-0 items-end justify-end pr-5 pb-4 pt-6 pl-1"
+            className="relative flex w-[38%] min-w-[128px] max-w-[176px] shrink-0 items-end justify-end pr-5 pb-4 pt-6 pl-1"
           >
+            {/* Soft glow (brand lilac / blue) */}
+            <div className="pointer-events-none absolute bottom-1 right-3 z-0 h-[148px] w-[150px] rounded-full bg-lilac/35 blur-2xl" />
+            <div className="pointer-events-none absolute bottom-2 right-6 z-0 h-[92px] w-[108px] rounded-full bg-[#ede9fe]/90 blur-xl" />
+            <div
+              className="pointer-events-none absolute bottom-0 right-0 z-0 h-[128px] w-[128px] opacity-80"
+              style={{
+                background:
+                  "radial-gradient(ellipse 100% 95% at 85% 95%, rgba(199,181,255,0.45) 0%, rgba(237,233,254,0.12) 48%, transparent 68%)",
+              }}
+            />
             <Image
               src="/state-06.png"
               alt=""
@@ -57,46 +65,39 @@ export const Home: ScreenRenderer = (ctx) => ({
               height={400}
               priority
               draggable={false}
-              className="h-[min(118px,31vw)] w-auto max-h-[124px] select-none object-contain object-bottom"
+              className="relative z-[1] h-[min(154px,39vw)] w-auto max-h-[160px] select-none object-contain object-bottom"
             />
           </div>
         </div>
 
-        <div className="mt-4 grid grid-cols-3 gap-2.5">
+        <div className="mt-4 grid grid-cols-2 gap-2.5">
           <DashboardTile
-            label="Pagar"
+            label="Pay"
             tint="#ede9fe"
             iconStroke="#6847e8"
             onClick={() => ctx.push("intent")}
             icon={<ArrowUp />}
           />
           <DashboardTile
-            label="Recibir"
+            label="Receive"
             tint="#dbefff"
             iconStroke="#0b7dd4"
             onClick={() => ctx.push("receive")}
             icon={<ArrowDown />}
-          />
-          <DashboardTile
-            label="Historial"
-            tint="#d8fae6"
-            iconStroke="#0d8948"
-            onClick={() => ctx.push("history")}
-            icon={<ClockHistory />}
           />
         </div>
 
         <div className="mt-9">
           <div className="mb-3 flex items-baseline justify-between gap-4">
             <h2 className="font-display text-[19px] font-black tracking-[-0.02em] text-[#131b34]">
-              Actividad reciente
+              Recent activity
             </h2>
             <button
               type="button"
               onClick={() => ctx.push("history")}
               className="shrink-0 text-[14px] font-bold text-[#7c5cff] transition-opacity hover:opacity-85"
             >
-              Ver todo
+              See all
             </button>
           </div>
 
@@ -105,9 +106,9 @@ export const Home: ScreenRenderer = (ctx) => ({
               const contact = mock.contacts.find((c) => c.id === h.counterparty)
               const initial = contact?.initial ?? h.counterparty.slice(0, 1).toUpperCase()
               const bg = contact?.bg ?? (h.direction === "out" ? "#e8e0ff" : "#d4f5e6")
-              const title = h.direction === "out" ? `A ${h.counterparty}` : `De ${h.counterparty}`
+              const title = h.direction === "out" ? `To ${h.counterparty}` : `From ${h.counterparty}`
               const amountPrefix = h.direction === "out" ? "−" : "+"
-              const statusLabel = h.direction === "out" ? "enviado" : "recibido"
+              const statusLabel = h.direction === "out" ? "sent" : "received"
               const statusColor = h.direction === "out" ? "#7c5cff" : "#1b9e5a"
 
               return (
@@ -165,7 +166,7 @@ function PayBar({ onPay }: { onPay: () => void }) {
     <button
       type="button"
       tabIndex={0}
-      aria-label="Nuevo pago"
+      aria-label="New payment"
       onClick={onPay}
       onKeyDown={onKeyDown}
       className="pressable mx-auto flex w-full items-center justify-center gap-2.5 rounded-[18px] py-[17px] font-display text-[16px] font-bold text-white outline-none [&_svg]:text-white"
@@ -176,7 +177,7 @@ function PayBar({ onPay }: { onPay: () => void }) {
       }}
     >
       <IconPlane />
-      Nuevo pago
+      New payment
     </button>
   )
 }
@@ -233,15 +234,6 @@ function ArrowDown() {
   return (
     <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
       <path d="M12 5v14M12 19l6-6M12 19l-6-6M5 21h14" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function ClockHistory() {
-  return (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2}>
-      <circle cx={12} cy={12} r={9} />
-      <path d="M12 7v6l4 3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }

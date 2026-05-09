@@ -10,19 +10,19 @@ function AliasForm({ ctx }: { ctx: NavCtx }) {
   const [value, setValue] = useState("")
   const slug = useMemo(() => sanitizeKumoLocalPart(value), [value])
   const valid = slug.length >= KUMO_ALIAS_MIN_LEN
-  const preview = slug || "tu-alias"
+  const preview = slug || "your-alias"
 
   return (
     <div className="pb-10">
       <div className="mt-6 text-center">
         <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-navy/45">
-          Bienvenido
+          Welcome
         </p>
         <h1 className="font-display mt-2 text-[26px] font-extrabold leading-[1.15] tracking-[-0.03em] text-navy">
-          Elige tu alias
+          Choose your alias
         </h1>
         <p className="mx-auto mt-2 max-w-[30ch] text-[14px] leading-snug text-navy/50">
-          Así te verán tus contactos. Solo letras minúsculas, números y guiones bajos.
+          This is how contacts will see you. Letters, numbers, and underscores—no spaces.
         </p>
       </div>
 
@@ -31,7 +31,7 @@ function AliasForm({ ctx }: { ctx: NavCtx }) {
           htmlFor="kumo-alias"
           className="text-[11px] font-bold uppercase tracking-wide text-navy/45"
         >
-          Tu alias
+          Your alias
         </label>
         <div className="mt-2 flex overflow-hidden rounded-2xl border-2 border-navy/[0.1] bg-cream px-4 py-[14px] focus-within:border-cyan focus-within:ring-4 focus-within:ring-cyan/25">
           <input
@@ -50,7 +50,7 @@ function AliasForm({ ctx }: { ctx: NavCtx }) {
           />
         </div>
         <p className="mt-3 truncate text-[13px] font-semibold text-navy/60">
-          <span className="text-navy/40">Así te verán:</span>{" "}
+          <span className="text-navy/40">You&apos;ll appear as:</span>{" "}
           <span className="break-all font-display text-[15px] font-black text-navy">
             {preview}
           </span>
@@ -65,7 +65,7 @@ function AliasForm({ ctx }: { ctx: NavCtx }) {
             ctx.completeAliasOnboarding(slug)
           }
         >
-          Continuar
+          Continue
         </PrimaryCTA>
       </div>
     </div>

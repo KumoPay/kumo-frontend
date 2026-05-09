@@ -1,10 +1,9 @@
-/** Canonical public alias (lowercase, a-z 0-9 _). */
+/** Normalize local alias: no spaces; letters (any case), digits, and _ only. */
 export function sanitizeKumoLocalPart(raw: string): string {
   return raw
     .trim()
-    .toLowerCase()
     .replace(/\s+/g, "")
-    .replace(/[^a-z0-9_]/g, "")
+    .replace(/[^a-zA-Z0-9_]/g, "")
     .slice(0, 24)
 }
 
