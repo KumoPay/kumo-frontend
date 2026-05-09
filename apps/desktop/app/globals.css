@@ -218,6 +218,14 @@ html, body {
 .kumo-wallet-btn .wallet-adapter-button:not([disabled]):hover { background: #B7F1FF; }
 .kumo-wallet-btn .wallet-adapter-button-start-icon { display: none; }
 
+/* Mobile mic button: expanding halo ring while recording */
+@keyframes kumo-mic-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(199,181,255,0.7); }
+  70%  { box-shadow: 0 0 0 16px rgba(199,181,255,0);   }
+  100% { box-shadow: 0 0 0 0   rgba(199,181,255,0);   }
+}
+.kumo-mic-pulse { animation: kumo-mic-pulse 1.4s ease-out infinite; }
+
 ::selection { background: #7FE8FF; color: #0B1020; }
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: #FAFCFF; }
