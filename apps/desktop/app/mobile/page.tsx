@@ -1,5 +1,5 @@
-import { MobileShell } from "./MobileShell"
+import MobilePageClient from "./MobilePageClient"
 
 export default function MobilePage() {
-  return <MobileShell />
+  return <MobilePageClient />
 }

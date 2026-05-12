@@ -75,7 +75,7 @@ export const Home: ScreenRenderer = (ctx) => ({
             label="Pay"
             tint="#ede9fe"
             iconStroke="#6847e8"
-            onClick={() => ctx.push("intent")}
+            onClick={() => ctx.push("chooseMode")}
             icon={<ArrowUp />}
           />
           <DashboardTile
@@ -152,7 +152,7 @@ export const Home: ScreenRenderer = (ctx) => ({
   ),
   cta: (
     <div className="mx-auto w-full max-w-[320px]">
-      <PayBar onPay={() => ctx.push("intent")} />
+      <PayBar onPay={() => ctx.push("chooseMode")} />
     </div>
   ),
 })

@@ -10,12 +10,16 @@ export type ScreenId =
   | "settings"
   | "connect"
   | "alias"
+  | "chooseMode"
   | "intent"
   | "sign"
   | "queued"
   | "settled"
 
-export const PAY_FLOW: ScreenId[] = ["intent", "sign", "queued", "settled"]
+export const PAY_FLOW: ScreenId[] = ["chooseMode", "intent", "sign", "queued", "settled"]
+
+/** Progress segments after mode is chosen (matches New payment composer UI). */
+export const PAY_PROGRESS_STEPS: ScreenId[] = ["intent", "sign", "queued", "settled"]
 
 export type WalletInfo = {
   id: string
@@ -44,6 +48,9 @@ export type NavCtx = {
   /** Active Solana cluster for RPC / display (mock; persisted locally). */
   solanaCluster: SolanaClusterId
   setSolanaCluster: (id: SolanaClusterId) => void
+  /** Privacy toggle on the intent composer header (off = default public UI). */
+  intentPrivate: boolean
+  setIntentPrivate: (v: boolean) => void
 }
 
 export type ScreenSlots = {

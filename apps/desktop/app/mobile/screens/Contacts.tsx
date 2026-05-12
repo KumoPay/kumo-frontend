@@ -42,7 +42,7 @@ export const Contacts: ScreenRenderer = (ctx) => ({
           <button
             key={c.id}
             type="button"
-            onClick={() => ctx.push("intent")}
+            onClick={() => ctx.push("chooseMode")}
             className="pressable flex w-full items-center gap-3 rounded-[18px] border border-[#eef0f3] bg-white px-4 py-3.5 text-left shadow-[0_8px_24px_-12px_rgba(15,23,42,0.1)]"
           >
             <div
@@ -84,7 +84,7 @@ export const Contacts: ScreenRenderer = (ctx) => ({
     <div className="mx-auto w-full max-w-[320px]">
       <button
         type="button"
-        onClick={() => ctx.push("intent")}
+        onClick={() => ctx.push("chooseMode")}
         className="pressable w-full rounded-[18px] py-[17px] font-display text-[16px] font-bold text-white outline-none"
         style={{
           background: purple,

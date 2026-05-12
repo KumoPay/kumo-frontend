@@ -1,5 +1,7 @@
 "use client"
 
+import Image from "next/image"
+import type { Dispatch, SetStateAction } from "react"
 import { useState } from "react"
 
 import type { NavCtx, ScreenRenderer } from "./types"
@@ -28,115 +30,192 @@ function IntentBody({ ctx }: { ctx: NavCtx }) {
   const [text, setText] = useState("")
   const [listening, setListening] = useState(false)
 
+  return (
+    <IntentComposerFrame
+      ctx={ctx}
+      text={text}
+      setText={setText}
+      listening={listening}
+      setListening={setListening}
+      mascotSrc={ctx.intentPrivate ? "/state-09.png" : "/state-05.png"}
+      mascotHeightClass={
+        ctx.intentPrivate
+          ? "h-[min(142px,39vw)]"
+          : "h-[min(124px,34vw)]"
+      }
+    />
+  )
+}
+
+/** Shared layout — public (`state-05`) vs private (`state-09`) mascot only. */
+function IntentComposerFrame({
+  ctx,
+  text,
+  setText,
+  listening,
+  setListening,
+  mascotSrc,
+  mascotHeightClass,
+}: {
+  ctx: NavCtx
+  text: string
+  setText: Dispatch<SetStateAction<string>>
+  listening: boolean
+  setListening: Dispatch<SetStateAction<boolean>>
+  mascotSrc: string
+  mascotHeightClass: string
+}) {
   const toggleVoice = () => setListening((v) => !v)
 
   return (
     <div className="mx-auto w-full max-w-[320px] pb-2">
-      <h1 className="font-display text-[28px] font-black leading-tight tracking-[-0.03em] text-[#0f172a]">
+      <div className="inline-flex items-center gap-2 rounded-full border-2 border-[#2dd4bf] bg-white px-3 py-1.5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
+        <span className="size-2 shrink-0 rounded-full bg-[#14b8a6]" aria-hidden />
+        <span className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#0f766e]">
+          AI Parser · KumoAI · Local
+        </span>
+      </div>
+
+      <h1 className="mt-4 font-display text-[28px] font-black leading-tight tracking-[-0.03em] text-[#0f172a]">
         New payment
       </h1>
-      <p className="mt-2 text-[14px] font-medium leading-snug text-[#6b7280]">
+      <p className="mt-2 text-[14px] font-medium leading-snug text-[#6b7380]">
         Describe the payment in plain language.
       </p>
 
-      {/* Text card */}
-      <div className="relative mt-6 rounded-[24px] border border-black/[0.04] bg-white p-4 shadow-[0_10px_36px_-14px_rgba(15,23,42,0.12)]">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={4}
-          placeholder="Describe your payment"
-          className="min-h-[112px] w-full resize-none bg-transparent font-display text-[16px] font-semibold leading-relaxed text-[#111827] outline-none placeholder:text-[#94a3b8]"
-        />
-        <div className="mt-3 flex items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={() => ctx.push("contacts")}
-            className="pressable inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/80 bg-[#ede9fe]/80 px-3 py-2 text-[12px] font-bold text-[#131b34] outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#7c5cff]"
-          >
-            <IconUserSmall />
-            Choose contact
-          </button>
-          <button
-            type="button"
-            onClick={toggleVoice}
-            aria-label={listening ? "Stop dictation" : "Voice dictation"}
-            aria-pressed={listening}
-            className={[
-              "pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full outline-none",
-              listening ? "kumo-mic-pulse" : "",
-            ].join(" ")}
-            style={{
-              background: listening ? "#C7B5FF" : "#dbefff",
-              boxShadow: listening
-                ? "0 0 0 0 rgba(199,181,255,0.5)"
-                : "0 4px 14px rgba(59,130,246,0.18)",
-            }}
-          >
-            {listening ? <StopIcon /> : <MicIcon />}
-          </button>
+      <div className="relative mt-5">
+        <div className="relative z-[2] flex justify-center">
+          <Image
+            src={mascotSrc}
+            alt=""
+            width={340}
+            height={340}
+            priority
+            draggable={false}
+            className={`${mascotHeightClass} w-auto object-contain object-bottom drop-shadow-[0_10px_28px_rgba(15,23,42,0.1)]`}
+          />
+        </div>
+        <div className="relative z-[1] -mt-[3.25rem] rounded-[24px] border border-black/[0.06] bg-white px-4 pb-4 pt-[3.35rem] shadow-[0_10px_36px_-14px_rgba(15,23,42,0.12)]">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            rows={4}
+            placeholder="Describe your payment"
+            className="min-h-[112px] w-full resize-none bg-transparent font-display text-[16px] font-semibold leading-relaxed text-[#111827] outline-none placeholder:text-[#94a3b8]"
+          />
+          <div className="mt-3 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => ctx.push("contacts")}
+              className="pressable inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/80 bg-[#ede9fe]/90 px-3 py-2 text-[12px] font-bold text-[#131b34] outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#7c5cff]"
+            >
+              <IconUserSmall />
+              Choose contact
+            </button>
+            <button
+              type="button"
+              onClick={toggleVoice}
+              aria-label={listening ? "Stop dictation" : "Voice dictation"}
+              aria-pressed={listening}
+              className={[
+                "pressable flex h-11 w-11 shrink-0 items-center justify-center rounded-full outline-none",
+                listening ? "kumo-mic-pulse" : "",
+              ].join(" ")}
+              style={{
+                background: listening ? "#C7B5FF" : "#dbefff",
+                boxShadow: listening
+                  ? "0 0 0 0 rgba(199,181,255,0.5)"
+                  : "0 4px 14px rgba(59,130,246,0.18)",
+              }}
+            >
+              {listening ? <StopIcon /> : <MicIcon />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Chips */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => ctx.setAirplane(!ctx.airplane)}
-          className="pressable inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-extrabold text-[#131b34]"
-          style={{
-            background: ctx.airplane ? "rgba(199,181,255,0.55)" : "rgba(237,233,254,0.95)",
-            boxShadow: ctx.airplane ? "inset 0 0 0 1.5px #a78bfa" : "none",
-          }}
-        >
-          <IconWifiOff />
-          offline
-        </button>
-        <span
-          className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-extrabold text-[#131b34]"
-          style={{ background: "rgba(186, 230, 253, 0.65)" }}
-        >
-          <IconLockSmall />
-          private
-        </span>
-        <button
-          type="button"
-          onClick={toggleVoice}
-          className="pressable inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-[11px] font-extrabold text-[#131b34]"
-          style={{
-            background: listening ? "rgba(199,181,255,0.55)" : "rgba(237,233,254,0.95)",
-            boxShadow: listening ? "inset 0 0 0 1.5px #a78bfa" : "none",
-          }}
-        >
-          <IconMicSmall />
-          voice
-        </button>
-      </div>
+      <PrivacyBelowCard ctx={ctx} />
 
       {listening ? (
-        <p className="mt-2 text-center text-[11px] font-bold uppercase tracking-[0.14em] text-[#7c5cff]">
+        <p className="mt-3 text-center text-[11px] font-bold uppercase tracking-[0.14em] text-[#7c5cff]">
           Listening…
         </p>
       ) : null}
-
-      {/* Privacy — same column width as CTA */}
-      <div className="mt-8 flex gap-3 rounded-[20px] border border-[#eef0f3] bg-white p-4 shadow-[0_4px_20px_-8px_rgba(15,23,42,0.08)]">
-        <div
-          className="flex size-11 shrink-0 items-center justify-center rounded-full"
-          style={{ background: "#dbefff" }}
-        >
-          <IconLockPrivacy />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="font-display text-[15px] font-black leading-tight tracking-[-0.02em] text-[#131b34]">
-            Private by default
-          </p>
-          <p className="mt-1.5 text-[13px] font-medium leading-snug text-[#6b7280]">
-            Kumo protects your metadata by default. No one can see what you pay or to whom.
-          </p>
-        </div>
-      </div>
     </div>
+  )
+}
+
+/** Large Privacy control under the card — matches header toggle. */
+function PrivacyBelowCard({ ctx }: { ctx: NavCtx }) {
+  if (ctx.intentPrivate) {
+    return (
+      <button
+        type="button"
+        onClick={() => ctx.setIntentPrivate(false)}
+        aria-pressed
+        className="pressable mt-5 flex w-full flex-col items-start gap-1 rounded-[20px] border-[2.5px] border-[#7c5cff] bg-gradient-to-br from-[#faf5ff] via-[#f5f3ff] to-[#ede9fe] px-4 py-4 text-left shadow-[0_14px_36px_-10px_rgba(124,92,255,0.55)] outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#7c5cff]"
+      >
+        <span className="flex w-full items-center gap-2.5">
+          <span
+            className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#ddd6fe] shadow-[inset_0_0_0_1.5px_rgba(124,92,255,0.35)]"
+            aria-hidden
+          >
+            <IconLockShut />
+          </span>
+          <span className="min-w-0 flex-1 font-display text-[17px] font-black tracking-[-0.02em] text-[#131b34]">
+            Privacy on
+          </span>
+          <span className="shrink-0 text-[12px] font-extrabold text-[#7c5cff]" aria-hidden>
+            ✓
+          </span>
+        </span>
+        <span className="pl-[3.25rem] text-[13px] font-semibold leading-snug text-[#64748b]">
+          Tap to use standard routing for this payment.
+        </span>
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => ctx.setIntentPrivate(true)}
+      aria-pressed={false}
+      className="pressable mt-5 flex w-full flex-col items-start gap-1 rounded-[20px] border-[2.5px] border-[#c4b5fd] bg-white px-4 py-4 text-left shadow-[0_14px_40px_-12px_rgba(124,92,255,0.42)] outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-[#7c5cff]"
+    >
+      <span className="flex w-full items-center gap-2.5">
+        <span
+          className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#ede9fe]"
+          aria-hidden
+        >
+          <IconLockOpen />
+        </span>
+        <span className="min-w-0 flex-1 font-display text-[17px] font-black tracking-[-0.02em] text-[#131b34]">
+          Privacy off
+        </span>
+      </span>
+      <span className="pl-[3.25rem] text-[13px] font-semibold leading-snug text-[#64748b]">
+        Tap to shield metadata for this payment — incognito-style routing.
+      </span>
+    </button>
+  )
+}
+
+function IconLockShut() {
+  return (
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x={5} y={11} width={14} height={10} rx={2} fill="#5b21b6" fillOpacity={0.15} stroke="#5b21b6" strokeWidth={2} />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#5b21b6" strokeWidth={2} strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function IconLockOpen() {
+  return (
+    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <rect x={5} y={11} width={14} height={10} rx={2} stroke="#7c5cff" strokeWidth={2} />
+      <path d="M8 11V7a4 4 0 0 1 7.7-1.2" stroke="#7c5cff" strokeWidth={2} strokeLinecap="round" />
+    </svg>
   )
 }
 
@@ -157,11 +236,11 @@ function IconUserSmall() {
 function MicIcon() {
   return (
     <svg width={20} height={20} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x="9" y="3" width="6" height="11" rx="3" stroke="#0f172a" strokeWidth="2" />
+      <rect x="9" y="3" width="6" height="11" rx="3" stroke="#0f172a" strokeWidth={2} />
       <path
         d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"
         stroke="#0f172a"
-        strokeWidth="2"
+        strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -173,63 +252,6 @@ function StopIcon() {
   return (
     <svg width={16} height={16} viewBox="0 0 24 24" aria-hidden>
       <rect x="6" y="6" width="12" height="12" rx="2" fill="#0f172a" />
-    </svg>
-  )
-}
-
-function IconWifiOff() {
-  return (
-    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M1 1l22 22M16.72 11.06a10.94 10.94 0 0 1 1.74 2.12M21 8.5a15.88 15.88 0 0 1-2.35 2.35M5 14.17A10.94 10.94 0 0 1 8.5 12m3.64-1.29c.24-.1.49-.18.76-.23M12 20h.01M8.53 16.53A6 6 0 0 1 12 15"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function IconLockSmall() {
-  return (
-    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x={5} y={11} width={14} height={10} rx={2} stroke="currentColor" strokeWidth={1.75} />
-      <path
-        d="M8 11V7a4 4 0 0 1 8 0v4"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
-function IconMicSmall() {
-  return (
-    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x={9} y={2} width={6} height={11} rx={3} stroke="currentColor" strokeWidth={1.75} />
-      <path
-        d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M9 22h6"
-        stroke="currentColor"
-        strokeWidth={1.75}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function IconLockPrivacy() {
-  return (
-    <svg width={22} height={22} viewBox="0 0 24 24" fill="none" aria-hidden>
-      <rect x={5} y={11} width={14} height={10} rx={2} stroke="#0369a1" strokeWidth={1.85} />
-      <path
-        d="M8 11V7a4 4 0 0 1 8 0v4"
-        stroke="#0369a1"
-        strokeWidth={1.85}
-        strokeLinecap="round"
-      />
     </svg>
   )
 }

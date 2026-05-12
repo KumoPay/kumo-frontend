@@ -25,6 +25,8 @@ export default function MobileLayout({ children }: { children: React.ReactNode }
       className="bg-cream text-navy"
       style={{
         minHeight: "100dvh",
+        backgroundColor: "#FAFCFF",
+        color: "#0B1020",
         overflow: "hidden",
         position: "relative",
         paddingTop: "env(safe-area-inset-top)",
